@@ -1,6 +1,7 @@
 /**
  ******************************************************************************
  * @file           : SystemDefines.hpp
+ * @author         : Aleks G
  * @brief          : Macros and wrappers
  ******************************************************************************
  *
@@ -47,7 +48,6 @@ constexpr uint8_t TASK_DEBUG_PRIORITY = 2;             // Priority of the debug 
 constexpr uint8_t TASK_DEBUG_QUEUE_DEPTH_OBJS = 10;    // Size of the debug task queue
 constexpr uint16_t TASK_DEBUG_STACK_DEPTH_WORDS = 512; // Size of the debug task stack
 
-
 // PROFILER TASK
 constexpr uint8_t TASK_PROFILER_PRIORITY = 2;             // Priority of the priority task
 constexpr uint8_t TASK_PROFILER_QUEUE_DEPTH_OBJS = 10;    // Size of the priority task queue
@@ -57,5 +57,15 @@ constexpr uint16_t TASK_PROFILER_STACK_DEPTH_WORDS = 512; // Size of the priorit
 constexpr uint8_t TASK_CAN_PRIORITY = 2;             // Priority of the can task
 constexpr uint8_t TASK_CAN_QUEUE_DEPTH_OBJS = 10;    // Size of the can task queue
 constexpr uint16_t TASK_CAN_STACK_DEPTH_WORDS = 512; // Size of the can task stack
+
+// PT Task
+constexpr uint8_t TASK_PT_PRIORITY = 2;             // Priority of the pt task
+constexpr uint8_t TASK_PT_QUEUE_DEPTH_OBJS = 10;    // Size of the pt task queue
+constexpr uint16_t TASK_PT_STACK_DEPTH_WORDS = 512; // Size of the pt task stack
+
+// FLASH TASK
+constexpr uint8_t TASK_FLASH_PRIORITY = 2;             // Priority of the flash task
+constexpr uint8_t TASK_FLASH_QUEUE_DEPTH_OBJS = 10;    // Size of the flash task queue
+constexpr uint16_t TASK_FLASH_STACK_DEPTH_WORDS = 512; // Size of the flash task stack
 
 #endif // CUBE_MAIN_SYSTEM_DEFINES_H
