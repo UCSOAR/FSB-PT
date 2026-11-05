@@ -27,7 +27,7 @@
 /************************************
  * VARIABLES
  ************************************/
-
+extern ADC_HandleTypeDef hadc3; // defined in Core/Src/main.c by MX
 /************************************
  * FUNCTION DECLARATIONS
  ************************************/
@@ -39,7 +39,7 @@
 /**
  * @brief Constructor for PTTask
  */
-PTTask::PTTask() : Task(TASK_FLASH_QUEUE_DEPTH_OBJS)
+PTTask::PTTask() : Task(TASK_PT_QUEUE_DEPTH_OBJS)
 {
 }
 
@@ -50,14 +50,14 @@ PTTask::PTTask() : Task(TASK_FLASH_QUEUE_DEPTH_OBJS)
 void PTTask::InitTask()
 {
     // Make sure the task is not already initialized
-    SOAR_ASSERT(rtTaskHandle == nullptr, "Cannot initialize watchdog task twice");
+    SOAR_ASSERT(rtTaskHandle == nullptr, "Cannot initialize Pressure Transducer task twice");
 
     BaseType_t rtValue =
         xTaskCreate((TaskFunction_t)PTTask::RunTask,
             (const char*)"PTTask",
-            (uint16_t)${TaskStackDepthDefinedInSystemDefines},
+            (uint16_t)TASK_PT_STACK_DEPTH_WORDS,
             (void*)this,
-            (UBaseType_t)${TaskPriorityDefinedInSystemDefines},
+            (UBaseType_t)TASK_PT_PRIORITY,
             (TaskHandle_t*)&rtTaskHandle);
 
                 SOAR_ASSERT(rtValue == pdPASS, "PTTask::InitTask() - xTaskCreate() failed");
@@ -72,10 +72,12 @@ void PTTask::Run(void * pvParams)
     while (1) {
         /* Process commands in blocking mode */
         Command cm;
-        bool res = qEvtQueue->ReceiveWait(cm);
-        if(res) {
-            HandleCommand(cm);
-        }
+        if (qEvtQueue->Receive(cm, 100)) {   // wait up to 100 ms for a message
+                HandleCommand(cm);
+         }
+
+        SOAR_PRINT("PTTask alive\n"); //placeholder
+        //PT READING GOES HERE
     }
 }
 

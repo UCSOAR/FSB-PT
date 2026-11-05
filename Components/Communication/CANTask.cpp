@@ -65,7 +65,7 @@ void CANBusTask::InitTask()
     BaseType_t rtValue =
         xTaskCreate((TaskFunction_t)CANBusTask::RunTask,
             (const char*)"CANBusTask",
-            (uint16_t){TASK_CAN_QUEUE_DEPTH_OBJS},
+            (uint16_t){TASK_CAN_STACK_DEPTH_WORDS},
             (void*)this,
             (UBaseType_t){TASK_CAN_PRIORITY},
             (TaskHandle_t*)&rtTaskHandle);

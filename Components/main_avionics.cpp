@@ -11,12 +11,12 @@
 #include "UARTDriver.hpp"
 #include "CubeTask.hpp"
 #include "CANTask.hpp"
+#include "PTTask.hpp"
 
 /* Drivers ------------------------------------------------------------------*/
 namespace Driver
 {
   UARTDriver usart3(USART3);
-  UARTDriver usart2(USART2);
 }
 
 /* Interface Functions
@@ -31,6 +31,7 @@ void run_main()
   CubeTask::Inst().InitTask();
   DebugTask::Inst().InitTask();
   CANBusTask::Inst().InitTask();
+  PTTask::Inst().InitTask();
 
   // Print System Boot Info : Warning, don't queue more than 10 prints before
   // scheduler starts
