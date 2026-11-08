@@ -1,8 +1,8 @@
 /*
  * CANBusTask.cpp
  *
- *  Created on: Oct. 10, 2026
- *      Author: adam
+ *  Created on: Nov 8, 2026
+ *      Author: Aleks G
  */
 /**
  ********************************************************************************
@@ -25,7 +25,8 @@
 #include "CANTask.hpp"
 #include "SystemDefines.hpp"
 #include "CANBusTargets.hpp"
-#include "SOLLogs.hpp"
+#include "PTLogs.hpp"
+#include "CanAutoNodeDaughter.hpp"
 
 
 
@@ -98,12 +99,15 @@ void CANBusTask::Run(void * pvParams)
 {
 	dau->TryRequestingJoiningNetwork();
     while (1) {
-    	if(dau->GetCurrentState() == dau->READY) {
-    		RecieveData();
-    	} else {
-    		HAL_Delay(1000);
-    		dau->TryRequestingJoiningNetwork();
+    	//This way the state machine doesn't get stuck and keeps
+    	if(dau->GetCurrentState() == dau->UNINITIALIZED) {
+    		SOAR_PRINT("CAN: Board Uninitialized, attempting to join\n");
+    		if(dau->TryRequestingJoiningNetwork()){
+    			SOAR_PRINT("CAN: Join ACK\n");
+    		}
     	}
+
+    	RecieveData();
 
         /* Process commands in blocking mode */
         Command cm;
@@ -111,8 +115,14 @@ void CANBusTask::Run(void * pvParams)
         if(res) {
             HandleCommand(cm);
         }
-        HAL_Delay(10);
 
+        if (dau->GetCurrentState() == dau->ERROR) {
+			SOAR_PRINT("CAN: error, retrying\n");
+			osDelay(1500);
+			dau->ExitErrorState();
+		}
+
+        osDelay(10);
         // How you might send a message, replacing the LOGID with a LOGID define from the LogTypes folder.
         //dau->SendMessageToMotherboardByLogID(LOGID, (uint8_t*)DATA_PTR);
 

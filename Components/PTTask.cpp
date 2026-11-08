@@ -76,7 +76,6 @@ void PTTask::Run(void * pvParams)
                 HandleCommand(cm);
          }
 
-        SOAR_PRINT("PTTask alive\n"); //placeholder
         //PT READING GOES HERE
     }
 }
