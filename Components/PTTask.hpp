@@ -21,6 +21,7 @@
  ************************************/
 #include "Task.hpp"
 #include "SystemDefines.hpp"
+#include "main.h"
 
 /************************************
  * MACROS AND DEFINES
@@ -53,6 +54,13 @@ private:
     PTTask();        // Private constructor
     PTTask(const PTTask&);                        // Prevent copy-construction
     PTTask& operator=(const PTTask&);            // Prevent assignment
+
+    bool ReadADC(ADC_HandleTypeDef* hadc, uint8_t rank, uint32_t& adcRaw);
+    bool CalibrateADC(ADC_HandleTypeDef* hadc);
+    int32_t ConvertADCToPressure_mPSI(uint32_t adcRaw);
+    bool SamplePressureTransducer(uint8_t ptNum, int32_t& pressureOut_mPSI);
+
+    int32_t pressure_mPSI[4] = {0};
 };
 
 /************************************

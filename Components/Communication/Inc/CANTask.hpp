@@ -18,7 +18,10 @@
 /************************************
  * MACROS AND DEFINES
  ************************************/
-
+enum CAN_TASK_COMMANDS : uint16_t {
+    CAN_TASK_COMMAND_NONE = 0,
+    CAN_TASK_COMMAND_SEND_PT_DATA,   // data = PT_PRESSURE_DATA
+};
 /************************************
  * TYPEDEFS
  ************************************/

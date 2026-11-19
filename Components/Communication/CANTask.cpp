@@ -35,6 +35,7 @@
  * PRIVATE MACROS AND DEFINES
  ************************************/
 extern FDCAN_HandleTypeDef hfdcan1;
+
 /************************************
  * VARIABLES
  ************************************/
@@ -79,11 +80,11 @@ void CANBusTask::InitTask()
 	 	 	 	 	 	 	 	 // you can still use it as a way to identify boards.
 
     //init canbus these will have to be configured in the ioc.
-	 // The SOL_INIT and SOL_COUNT macros are defined in the LogTypes folder in CommunicationSystemsSubmodule.
-	 // In this example, they are for the FSB SOL board, but new ones for your board should be created there.
+	 // The PT_INIT and PT_COUNT macros are defined in the LogTypes folder in CommunicationSystemsSubmodule.
+	 // In this example, they are for the FSB PT board, but new ones for your board should be created there.
     dau = new CanAutoNodeDaughter{&hfdcan1,
-    	SOL_Init,
-		SOL_COUNT,
+    	PT_Init,
+		PT_COUNT,
 		BOARD_TYPE,
 		SLOT_NUMBER,
 		CAN_GSE_TARGET_PT1
@@ -137,6 +138,15 @@ void CANBusTask::Run(void * pvParams)
 void CANBusTask::HandleCommand(Command& cm)
 {
     switch (cm.GetCommand()) {
+
+    case DATA_COMMAND: {
+        if (cm.GetTaskCommand() == CAN_TASK_COMMAND_SEND_PT_DATA) {
+            if (dau->GetCurrentState() == CanAutoNodeDaughter::READY) {
+                dau->SendMessageToMotherboardByLogID(_PT_PRESSURE_DATA_LOGINDEX, cm.GetDataPointer());
+            }
+        }
+        break;
+    }
 
     default:
         SOAR_PRINT("CANBusTask - Received Unsupported Command {%d}\n", cm.GetCommand());
